@@ -467,7 +467,7 @@ semfin(void)
             error(45, 3, gbl.lineno, SYMNAME(sptr), SYMNAME(gbl.entries));
         pointer_check:
           STYPEP(FVALG(sptr), ST_VAR);
-          if (POINTERG(sptr) || ALLOCATTRG(FVALG(sptr))) {
+          if (POINTERG(FVALG(sptr)) || ALLOCATTRG(FVALG(sptr))) {
             /* We convert a pointer-valued function into a subroutine whose
              * first dummy argument is the result now, really late in
              * semantic analysis.
