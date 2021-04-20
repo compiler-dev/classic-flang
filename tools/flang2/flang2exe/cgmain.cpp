@@ -6566,6 +6566,7 @@ find_load_cse(int ilix, OPERAND *load_op, LL_Type *llt)
   int del_store_flags;
   int ld_nme;
   int c;
+  int opnd1, sptr;
 
   if (new_ebb || (!ilix) || (IL_TYPE(ILI_OPC(ilix)) != ILTY_LOAD))
     return NULL;
@@ -6573,6 +6574,13 @@ find_load_cse(int ilix, OPERAND *load_op, LL_Type *llt)
   ld_nme = ILI_OPND(ilix, 2);
   if (ld_nme == NME_VOL) /* don't optimize a VOLATILE load */
     return NULL;
+
+  opnd1 = ILI_OPND(ilix, 1);
+  if (ILI_OPC(opnd1) == IL_ACON) {
+    sptr = CONVAL1G(ILI_OPND(opnd1, 1));
+    if (SCG(sptr) == SC_CMBLK && MODCMNG(MIDNUMG(sptr)) == 0)
+      return NULL;
+  }
 
   /* If there is a deletable store to 'ld_nme', 'del_store_li', set
    * its 'deletable' flag to false.  We do this because 'ld_ili'

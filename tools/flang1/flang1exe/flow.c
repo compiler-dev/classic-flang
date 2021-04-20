@@ -2736,6 +2736,7 @@ const_prop(void)
   int fgx;
   Q_ITEM *q;
   int dvl;
+  int sptr;
 
   if (XBIT(6, 0x1))
     return FALSE;
@@ -2820,6 +2821,14 @@ const_prop(void)
   for (df = FIRST_DEF; df <= opt.ndefs; df++) {
     if (!can_prop_fg(DEF_FG(df)))
       continue;
+
+    sptr = basesym_of(DEF_NM(df));
+    if (sptr == 0)
+      continue;
+    if (SCG(sptr) == SC_CMBLK && MODCMNG(CMBLKG(sptr)) == 0) {
+      continue;
+    }
+
     if (DEF_CONST(df) && can_prop_def(df) && DEF_PRECISE(df)) {
       cp.l_q->next = GET_Q_ITEM(q);
       cp.l_q = q;
