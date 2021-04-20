@@ -918,8 +918,13 @@ mk_binop(int optype, int lop, int rop, DTYPE dtype)
           INT v;
           v1 = CONVAL2G(A_SPTRG(lop));
           v2 = CONVAL2G(A_SPTRG(rop));
-          if (v2 < 0)
+          if (v2 < 0) {
+            if (v1 == -1 && (v2 & 1))
+              return mk_cval((INT)(-1), DT_INT);
+            if (v1 == -1 || v1 == 1)
+              return astb.i1;
             return astb.i0;
+          }
           v = v1;
           while (--v2 > 0)
             v *= v1;
